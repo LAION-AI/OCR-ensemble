@@ -2,3 +2,6 @@ img2dataset
 fastparquet
 webdataset
 matplotlib
+jupyter
+easyocr
+tqdm
