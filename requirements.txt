@@ -5,3 +5,8 @@ matplotlib
 jupyter
 easyocr
 tqdm
+gdown
+transformers
+torch
+torchvision
+numpy
