@@ -10,3 +10,5 @@ transformers
 torch
 torchvision
 numpy
+scikit-learn
+functools
