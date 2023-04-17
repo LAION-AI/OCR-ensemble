@@ -20,17 +20,17 @@ https://huggingface.co/microsoft/layoutlmv3-large
 [multilingual]
 https://github.com/PaddlePaddle/PaddleOCR
 
-* **[Handwritten]** Handwritten text
+* **[Handwritten]** Handwritten text [implemented]
 https://huggingface.co/microsoft/trocr-large-handwritten
 
-* **[Handwritten]** Handwritten math
+* **[Handwritten]** Handwritten math [implemented]
 https://huggingface.co/Azu/trocr-handwritten-math
 
-* **[Printed Document, Latex formula]** Latex expert
+* **[Printed Document, Latex formula]** Latex expert [implemented]
 https://colab.research.google.com/drive/1TO10E5fa9KeVyHQBhQQP3VESeigRTcsG?usp=sharing
 
-* CLIP language detector, limited functionality
+* CLIP language detector, limited functionality [implemented]
 https://colab.research.google.com/drive/16XU0v8JEeolQ4uK8XL0EbmZhLWLpF0ti?usp=sharing
 
-* CLIP text detector, simply detects text or no text in images
+* CLIP text detector, simply detects text or no text in images [implemented]
 https://colab.research.google.com/drive/1M66t-lnd0QT-opdGS4Bc_zkdzdWAjYCa?usp=sharing 
