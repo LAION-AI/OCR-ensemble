@@ -8,7 +8,7 @@ Follow these steps to set up the environment and install the required dependenci
 
 - Python 3.9
 - PyTorch (GPU version)
-- PaddleOCR (GPU version)
+- PaddleOCR 
 
 ### Installing Dependencies
 
