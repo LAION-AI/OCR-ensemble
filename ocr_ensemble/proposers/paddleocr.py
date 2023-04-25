@@ -1,5 +1,4 @@
 from paddleocr import PaddleOCR
-from .opencv import filterAndMerge
 from .utils import applyPadding, uull2xywh, rotatedCrop
 import torch
 

@@ -9,3 +9,9 @@ transformers
 numpy
 scikit-learn
 sentencepiece
+paddleocr
+ftfy 
+regex 
+clip @ git+https://github.com/openai/CLIP.git
+einops
+opencv-python
