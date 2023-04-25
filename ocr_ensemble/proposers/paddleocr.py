@@ -30,7 +30,7 @@ class PaddleOCRProposalGenerator():
         crops = [rotatedCrop(image, bbox) for bbox in bboxes]            
         # bboxes are in paddleocrs: top left, top right, bottom right, bottom left coordinate format
         if len(crops) == 0:
-            bboxes += [[[0, 0], [xmax, 0], [xmax, ymax], [0, ymax]]]
-            #bboxes += [[[0,0], [0, ymax], [xmax, ymax], [xmax, 0]]]
+            #bboxes += [[[0, 0], [xmax, 0], [xmax, ymax], [0, ymax]]]
+            bboxes += [[[0,0], [0, ymax], [xmax, ymax], [xmax, 0]]]
             crops += [image.copy()]
         return crops, bboxes

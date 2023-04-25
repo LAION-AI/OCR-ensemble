@@ -11,3 +11,4 @@ torch
 torchvision
 numpy
 scikit-learn
+sentencepiece
