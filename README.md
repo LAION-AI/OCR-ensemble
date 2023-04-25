@@ -1,5 +1,57 @@
 # OCR-ensemble
 
+## Installation
+
+Follow these steps to set up the environment and install the required dependencies using conda.
+
+### Prerequisites
+
+- Python 3.9
+- PyTorch (GPU version)
+- PaddleOCR (GPU version)
+
+### Installing Dependencies
+
+1. Clone the repository:
+
+```bash
+git clone git@github.com:LAION-AI/OCR-ensemble.git
+cd OCR-ensemble
+```
+
+2. Create a conda virtual environment (optional, but recommended):
+
+```bash
+conda create -n your-env-name python=3.9
+conda activate your-env-name
+```
+
+3. Install PyTorch (GPU version) by following the instructions on the [official website](https://pytorch.org/get-started/locally/). Make sure to choose the conda-based installation for your system.
+
+```bash
+pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu117
+```
+
+4. Install paddlepaddle by following the instructions on the [official GitHub repository](https://github.com/PaddlePaddle/PaddleOCR#installation). 
+In order to install the GPU version, this might be helpful:
+
+#### Linux
+```bash
+python -m pip install paddlepaddle-gpu -i https://pypi.tuna.tsinghua.edu.cn/simple
+```
+
+#### Windows
+```bash
+python -m pip install paddlepaddle-gpu==2.4.2.post117 -f https://www.paddlepaddle.org.cn/whl/windows/mkl/avx/stable.html
+```
+
+5. Install the remaining required packages from the `requirements.txt` file:
+
+```bash
+pip install -r requirements.txt
+```
+
+
 ### Overview
 1. Classify document for type of text 
 2. Use expert from ensemble of existing OCR + layout parsing models  to get text+bboxes of text, —> concant that to caption 
