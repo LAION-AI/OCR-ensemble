@@ -3,12 +3,9 @@ fastparquet
 webdataset
 matplotlib
 jupyter
-easyocr
 tqdm
 gdown
 transformers
-torch
-torchvision
 numpy
 scikit-learn
 sentencepiece
