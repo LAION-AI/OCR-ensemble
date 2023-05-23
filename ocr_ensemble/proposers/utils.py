@@ -36,7 +36,7 @@ def uull2xywh(uullbbox):
     return rect
 
 
-def rotatedCrop(img, corners):
+def rotatedCrop(img, corners, flip_if_vertical=True, return_180=False):
     image = Image.fromarray(img)
     #code written by chatgpt4
     upper_left, upper_right, lower_right, lower_left = corners
@@ -53,7 +53,6 @@ def rotatedCrop(img, corners):
     dx = upper_right[0] - upper_left[0]
     dy = upper_right[1] - upper_left[1]
     rotation_angle = math.degrees(math.atan2(dy, dx))
-
     # Rotate the image back by rotation_angle
     rotated_image = image.rotate(rotation_angle, resample=Image.BICUBIC, center=(center_x, center_y))
 
@@ -62,6 +61,20 @@ def rotatedCrop(img, corners):
     upper = center_y - height // 2
     right = center_x + width // 2
     lower = center_y + height // 2
+
+    if flip_if_vertical and height > 1.1*width:
+        # Rotate again to make the text horizontal
+        rotated_image = rotated_image.rotate(90, resample=Image.BICUBIC, center=(center_x, center_y))
+        # Swap width and height
+        width, height = height, width 
+        # Crop the unrotated box
+        left = center_x - width // 2
+        upper = center_y - height // 2
+        right = center_x + width // 2
+        lower = center_y + height // 2
+
     cropped_image = rotated_image.crop((left, upper, right, lower))
+    if return_180:
+        return cropped_image, cropped_image.rotate(180)
     return np.array(cropped_image)
 
