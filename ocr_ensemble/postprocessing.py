@@ -1,11 +1,11 @@
 import openai
-from transformers import AutoTokenizer, RobertaForMaskedLM
+from transformers import AutoTokenizer, RobertaForMaskedLM, RobertaPreLayerNormForMaskedLM
 import torch
 
 class RobertaPostprocessor:
     def __init__(self, debug=False):
-        self.tokenizer = AutoTokenizer.from_pretrained("roberta-base")
-        self.model = RobertaForMaskedLM.from_pretrained("roberta-base")
+        self.tokenizer = AutoTokenizer.from_pretrained("roberta-large")
+        self.model = RobertaForMaskedLM.from_pretrained("roberta-large")
         if torch.cuda.is_available():
             self.model = self.model.cuda()
     
@@ -24,6 +24,30 @@ class RobertaPostprocessor:
         if isinstance(text, str):
             return out[0]
         return out
+
+class RobertaPreLNPostprocessor:
+    def __init__(self, debug=False):
+        self.model = RobertaPreLayerNormForMaskedLM.from_pretrained("andreasmadsen/efficient_mlm_m0.40")
+        self.tokenizer = AutoTokenizer.from_pretrained("andreasmadsen/efficient_mlm_m0.40")
+        if torch.cuda.is_available():
+            self.model = self.model.cuda()
+    
+    def __call__(self, text):
+        if isinstance(text, str):
+            input_text = [text]
+        else:
+            input_text = text
+        inputs = self.tokenizer(input_text, return_tensors="pt", padding=True)
+        if torch.cuda.is_available():
+            inputs = {k: v.cuda() for k, v in inputs.items()}
+        with torch.no_grad():
+            logits = self.model(**inputs).logits
+        out = self.tokenizer.batch_decode(logits.argmax(dim=2))
+        out = [out.replace('<s>', '').replace('</s>', '').strip() for out in out]
+        if isinstance(text, str):
+            return out[0]
+        return out
+
 
 def postprocess(text):
     response = openai.ChatCompletion.create(
