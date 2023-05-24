@@ -36,7 +36,7 @@ def uull2xywh(uullbbox):
     return rect
 
 
-def rotatedCrop(img, corners, flip_if_vertical=True, return_180=False):
+def rotatedCrop(img, corners, flip_if_vertical=False, return_180=False):
     image = Image.fromarray(img)
     #code written by chatgpt4
     upper_left, upper_right, lower_right, lower_left = corners
