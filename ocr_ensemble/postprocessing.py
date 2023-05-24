@@ -1,15 +1,17 @@
 import openai
-from transformers import AutoTokenizer, RobertaForMaskedLM, RobertaPreLayerNormForMaskedLM
+from transformers import AutoTokenizer, RobertaForMaskedLM, RobertaPreLayerNormForMaskedLM, XLMRobertaForMaskedLM
 import torch
+from weighted_levenshtein import lev
+
 
 class RobertaPostprocessor:
-    def __init__(self, debug=False):
-        self.tokenizer = AutoTokenizer.from_pretrained("roberta-large")
-        self.model = RobertaForMaskedLM.from_pretrained("roberta-large")
+    def __init__(self, debug=False, size="base"):
+        self.tokenizer = AutoTokenizer.from_pretrained(f"roberta-{size}")
+        self.model = RobertaForMaskedLM.from_pretrained(f"roberta-{size}")
         if torch.cuda.is_available():
             self.model = self.model.cuda()
     
-    def __call__(self, text):
+    def __call__(self, text, filter=False):
         if isinstance(text, str):
             input_text = [text]
         else:
@@ -21,6 +23,10 @@ class RobertaPostprocessor:
             logits = self.model(**inputs).logits
         out = self.tokenizer.batch_decode(logits.argmax(dim=2))
         out = [out.replace('<s>', '').replace('</s>', '').strip() for out in out]
+        if filter:
+            for idx, o in enumerate(out):
+                if lev(o.encode("ascii", "ignore").decode(), input_text[idx].encode("ascii", "ignore").decode()) > 5:
+                    out[idx] = input_text[idx]
         if isinstance(text, str):
             return out[0]
         return out
@@ -32,7 +38,7 @@ class RobertaPreLNPostprocessor:
         if torch.cuda.is_available():
             self.model = self.model.cuda()
     
-    def __call__(self, text):
+    def __call__(self, text, filter=False):
         if isinstance(text, str):
             input_text = [text]
         else:
@@ -44,6 +50,37 @@ class RobertaPreLNPostprocessor:
             logits = self.model(**inputs).logits
         out = self.tokenizer.batch_decode(logits.argmax(dim=2))
         out = [out.replace('<s>', '').replace('</s>', '').strip() for out in out]
+        if filter:
+            for idx, o in enumerate(out):
+                if lev(o.encode("ascii", "ignore").decode(), input_text[idx].encode("ascii", "ignore").decode()) > 5:
+                    out[idx] = input_text[idx]
+        if isinstance(text, str):
+            return out[0]
+        return out
+    
+class XLMRobertaPostprocessor:
+    def __init__(self, debug=False, size="base"):
+        self.tokenizer = AutoTokenizer.from_pretrained(f"xlm-roberta-{size}")
+        self.model = XLMRobertaForMaskedLM.from_pretrained(f"xlm-roberta-{size}")
+        if torch.cuda.is_available():
+            self.model = self.model.cuda()
+    
+    def __call__(self, text, filter=False):
+        if isinstance(text, str):
+            input_text = [text]
+        else:
+            input_text = text
+        inputs = self.tokenizer(input_text, return_tensors="pt", padding=True)
+        if torch.cuda.is_available():
+            inputs = {k: v.cuda() for k, v in inputs.items()}
+        with torch.no_grad():
+            logits = self.model(**inputs).logits
+        out = self.tokenizer.batch_decode(logits.argmax(dim=2))
+        out = [out.replace('<s>', '').replace('</s>', '').strip() for out in out]
+        if filter:
+            for idx, o in enumerate(out):
+                if lev(o.encode("ascii", "ignore").decode(), input_text[idx].encode("ascii", "ignore").decode()) > 5:
+                    out[idx] = input_text[idx]
         if isinstance(text, str):
             return out[0]
         return out
