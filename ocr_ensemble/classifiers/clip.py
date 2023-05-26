@@ -56,7 +56,7 @@ class ClipEmbedding():
 
 class ClipMulticlass():
     # the expets currently expect [height, width, channels], 0-255, uint8 HxWxC
-    def __init__(self, expert_texts, clip_emb=None, debug=False):
+    def __init__(self, expert_texts, clip_emb=None, debug=False, model_directory='../models/moe_clf.pkl', targets_directory='../models/moe_labels.json'):
         
         self.debug = debug
         self.expert_texts = [text[:77] for text in expert_texts] #:77 is the max length for openai ViT-B/32
@@ -69,10 +69,10 @@ class ClipMulticlass():
         if self.debug:
             print(self.expert_texts)
             print(self.expert_embs)
-        with open('../models/moe_clf.pkl', 'rb') as f:
+        with open(model_directory, 'rb') as f:
             self.moe_clf = pickle.load(f) # sklearn logisticregression for now
         
-        with open('../models/moe_labels.json', 'r') as f:
+        with open(targets_directory, 'r') as f:
             self.moe_targets = json.load(f)
             print('only supported targets', self.moe_targets)
 
@@ -133,12 +133,12 @@ class ClipMulticlassZeroshot():
 
 
 class ClipPresence():
-    def __init__(self, clip_emb=None):
+    def __init__(self, clip_emb=None, model_directory='../models/presence_clf.pkl'):
         if clip_emb:
             self.clip_emb = clip_emb 
         else:
             self.clip_emb = ClipEmbedding()
-        with open('../models/presence_clf.pkl', 'rb') as f:
+        with open(model_directory, 'rb') as f:
             self.presence_clf = pickle.load(f) # sklearn logisticregression for now
 
     def get_transform(self):
