@@ -56,7 +56,7 @@ class ClipEmbedding():
 
 class ClipMulticlass():
     # the expets currently expect [height, width, channels], 0-255, uint8 HxWxC
-    def __init__(self, expert_texts, clip_emb=None, debug=False, model_directory='../models/moe_clf.pkl', targets_directory='../models/moe_labels.json'):
+    def __init__(self, expert_texts, clip_emb=None, debug=False, model_directory='../models/moe_clf_4.pkl', targets_directory='../models/moe_labels_4.json'):
         
         self.debug = debug
         self.expert_texts = [text[:77] for text in expert_texts] #:77 is the max length for openai ViT-B/32
