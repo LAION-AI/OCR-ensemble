@@ -36,7 +36,7 @@ def uull2xywh(uullbbox):
     return rect
 
 
-def rotatedCrop(img, corners, flip_if_vertical=False, return_180=False):
+def rotatedCrop(img, corners, flip_if_vertical=False, return_180=False, return_90s=False):
     image = Image.fromarray(img)
     #code written by chatgpt4
     upper_left, upper_right, lower_right, lower_left = corners
@@ -75,6 +75,14 @@ def rotatedCrop(img, corners, flip_if_vertical=False, return_180=False):
 
     cropped_image = rotated_image.crop((left, upper, right, lower))
     if return_180:
-        return cropped_image, cropped_image.rotate(180)
+        cropped_center_x, cropped_center_y = cropped_image.width // 2, cropped_image.height // 2
+        return cropped_image, cropped_image.rotate(180, resample=Image.BICUBIC, center=(cropped_center_x, cropped_center_y))
+    if return_90s:
+        cropped_center_x, cropped_center_y = cropped_image.width // 2, cropped_image.height // 2
+        cropped_image = np.array(cropped_image)
+        r90 = cv2.rotate(cropped_image, cv2.ROTATE_90_CLOCKWISE)
+        r180 = cv2.rotate(r90, cv2.ROTATE_90_CLOCKWISE)
+        r270 = cv2.rotate(r180, cv2.ROTATE_90_CLOCKWISE)
+        return cropped_image, r90, r180, r270
     return np.array(cropped_image)
 
