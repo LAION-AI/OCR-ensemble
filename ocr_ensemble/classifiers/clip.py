@@ -25,7 +25,7 @@ class ClipEmbedding():
     def get_transform_depr(self):
         def transform(img):
             assert img.shape[2] == 3 or img.dtype != np.uint8, "we expect uint8 HxWxC images with values in 0..255"
-            return self.clip_preproc(img)
+            return self.preprocess(img)
         return transform
 
     def get_collate(self):
@@ -33,9 +33,9 @@ class ClipEmbedding():
 
     def get_img_collate(self):
         def collate(imgs):
-            assert imgs[0].shape[2] == 3 or imgs[0].dtype != np.uint8, "we expect uint8 HxWxC images with values in 0..255"
+            assert np.array(imgs[0]).shape[2] == 3 or np.array(imgs[0]).dtype != np.uint8, "we expect uint8 HxWxC images with values in 0..255"
             # how to turn a list of imgs to a batch
-            batch = torch.cat([self.clip_preproc(img).unsqueeze(0) for img in imgs], axis=0)
+            batch = torch.cat([self.preprocess(img).unsqueeze(0) for img in imgs], axis=0)
             return batch
         return collate 
 

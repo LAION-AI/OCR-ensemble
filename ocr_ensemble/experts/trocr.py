@@ -1,6 +1,7 @@
 from transformers import TrOCRProcessor, VisionEncoderDecoderModel
 import numpy as np
 from functools import partial
+import torch
 
 supported_models = []
 supported_sizes = ['small', 'base', 'large']
@@ -21,6 +22,8 @@ class TrOCRExpert():
         assert model_name in supported_models, f"supported models: {supported_models}"
         self.processor = TrOCRProcessor.from_pretrained(model_name)
         self.model = VisionEncoderDecoderModel.from_pretrained(model_name)
+        if torch.cuda.is_available():
+            self.model = self.model.cuda()
 
     def get_transform(self):
         return partial(trocr_transform, processor=self.processor)
@@ -42,7 +45,7 @@ class TrOCRExpert():
         # list of h, w, c images
         # b, h, w, c images of text
         pixel_values = self.processor(images=images, return_tensors="pt").pixel_values
-        generated_ids = self.model.generate(pixel_values)
+        generated_ids = self.model.generate(pixel_values.to(self.model.device))
         generated_text = self.processor.batch_decode(generated_ids, skip_special_tokens=True)
         return generated_text
 
