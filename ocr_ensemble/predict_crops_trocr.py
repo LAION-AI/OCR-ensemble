@@ -25,7 +25,7 @@ def main():
     parser.add_argument('input', type=str, help='Path to the folder containing images or pkl file')
     parser.add_argument('--type', type=str, default='stage1', choices=['handwritten', 'printed', 'scene', 'stage1'], help='Type of TrOCRExpert to use')
     parser.add_argument('--size', type=str, default='small', choices=['base', 'large'], help='Size to use for the TrOCRExpert')
-    parser.add_argument('--batch_size', type=int, default=20, help='Batch size to use for the TrOCRExpert')
+    parser.add_argument('--batch_size', type=int, default=64, help='Batch size to use for the TrOCRExpert')
     parser.add_argument('--output', type=str, default='output.json', help='Path to the output file')
     args = parser.parse_args()
 
@@ -60,7 +60,6 @@ def main():
             texts = trocr_expert.process_list(batch)
             batch = []
             res += texts
-            print(texts)
     if len(batch) > 0:
         texts = trocr_expert.process_list(batch)
         batch = []
