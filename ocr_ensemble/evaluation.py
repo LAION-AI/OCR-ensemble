@@ -6,3 +6,6 @@ def average_levenshtein(gts, preds):
     for gt, pred in zip(gts, preds):
         levs += [lev(gt.encode("ascii", "ignore").decode(), pred.encode("ascii", "ignore").decode())]
     return np.mean(levs)
+
+def levenshtein(gt, pred):
+    return lev(gt.encode("ascii", "ignore").decode(), pred.encode("ascii", "ignore").decode())
