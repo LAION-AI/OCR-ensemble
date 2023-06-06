@@ -18,3 +18,8 @@ opencv-python
 p_tqdm
 weighted_levenshtein
 gdown
+pybind11
+fairseq
+nltk
+fastwer
+Levenshtein

@@ -12,3 +12,4 @@ def average_levenshtein(gts, preds, dist=levenshtein):
     for gt, pred in zip(gts, preds):
         levs += [dist(gt, pred)]
     return np.mean(levs)
+
